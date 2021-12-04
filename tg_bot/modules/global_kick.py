@@ -35,9 +35,7 @@ def gkick(bot: Bot, update: Update, args: List[str]):
     try:
         user_chat = bot.get_chat(user_id)
     except BadRequest as excp:
-        if excp.message in GKICK_ERRORS:
-            pass
-        else:
+        if excp.message not in GKICK_ERRORS:
             message.reply_text("User cannot be Globally kicked because: {}".format(excp.message))
             return
     except TelegramError:
@@ -59,11 +57,9 @@ def gkick(bot: Bot, update: Update, args: List[str]):
     message.reply_text("Globally kicking user @{}".format(user_chat.username))
     for chat in chats:
         try:
-             bot.unban_chat_member(chat.chat_id, user_id)  # Unban_member = kick (and not ban)
+            bot.unban_chat_member(chat.chat_id, user_id)  # Unban_member = kick (and not ban)
         except BadRequest as excp:
-            if excp.message in GKICK_ERRORS:
-                pass
-            else:
+            if excp.message not in GKICK_ERRORS:
                 message.reply_text("User cannot be Globally kicked because: {}".format(excp.message))
                 return
         except TelegramError:
